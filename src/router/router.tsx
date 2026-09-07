@@ -8,18 +8,20 @@ const routes = createBrowserRouter([
   {
     path: '/',
     element: <App></App>,
-  },
-  {
-    path: '/Login',
-    element: <Login></Login>,
-  },
-  {
-    path: '/Home',
-    element: <Home></Home>,
-  },
-  {
-    path: '/Products',
-    element: <Products></Products>,
+    children: [
+      {
+        path: '/Login',
+        element: <Login></Login>,
+      },
+      {
+        path: '/Home',
+        element: <Home></Home>,
+      },
+      {
+        path: '/Products',
+        element: <Products></Products>,
+      },
+    ],
   },
 ]);
 

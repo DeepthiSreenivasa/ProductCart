@@ -1,0 +1,198 @@
+# AUTH-001 — Build Login Form
+
+**Type:** User Story
+**Epic:** Authentication
+**Priority:** High
+**Estimate:** 3 Story Points
+
+## User Story
+
+**As a user,**
+I want to enter my username and password on a Login page,
+**so that I can provide my credentials to authenticate with the application.**
+
+---
+
+## Scope
+
+Build the Login page and form UI.
+
+### In Scope
+
+* Login page
+* Username input
+* Password input
+* Login button
+* Client-side validation
+* Accessible form structure
+* Form submission handling
+
+### Out of Scope
+
+Do **not** implement these yet:
+
+* API integration
+* TanStack Query
+* Redux
+* Authentication state
+* Token storage
+* Protected routes
+* Logout
+* Redirect after login
+
+We will handle those in subsequent tickets.
+
+---
+
+## Acceptance Criteria
+
+### AC1 — Login Page
+
+Given I navigate to `/Login`
+
+Then I should see:
+
+* Username input
+* Password input
+* Login button
+
+---
+
+### AC2 — Required Fields
+
+Given the user submits an empty form
+
+Then:
+
+* Username should display a validation error.
+* Password should display a validation error.
+* No API request should be made.
+
+---
+
+### AC3 — Username Validation
+
+Given the username field is empty
+
+Then the user should see an appropriate validation message.
+
+---
+
+### AC4 — Password Validation
+
+Given the password field is empty
+
+Then the user should see an appropriate validation message.
+
+---
+
+### AC5 — Successful Form Submission
+
+Given valid username and password values
+
+When the user submits the form
+
+Then:
+
+* Form submission should execute successfully.
+* The entered values should be available to the submit handler.
+
+For now, the submit handler may simply log a **non-sensitive confirmation** or temporarily inspect the values during development.
+
+**Do not log passwords in the final implementation.**
+
+---
+
+### AC6 — Accessibility
+
+The form must:
+
+* Use proper `<label>` associations.
+* Allow complete keyboard navigation.
+* Expose validation errors appropriately.
+* Have a meaningful accessible name for the form.
+* Use an appropriate input type for the password field.
+
+---
+
+### AC7 — Button Behavior
+
+The Login button should:
+
+* Be a submit button.
+* Submit the form when activated with mouse or keyboard.
+
+---
+
+## Technical Constraints
+
+Use:
+
+* **React Hook Form** for form state
+* **Zod** for validation
+* TypeScript
+* MUI components for the UI
+
+Do **not** use Redux or TanStack Query in this ticket.
+
+---
+
+## Expected Component Structure
+
+You can decide the exact structure, but a reasonable starting point is:
+
+```text
+features/
+└── auth/
+    └── components/
+        └── LoginForm.tsx
+```
+
+The route/page can compose the form:
+
+```text
+Login Page
+    ↓
+LoginForm
+    ├── Username
+    ├── Password
+    └── Submit
+```
+
+---
+
+## Definition of Done
+
+* [ ] Login route renders the Login page
+* [ ] Login form implemented
+* [ ] React Hook Form integrated
+* [ ] Zod validation integrated
+* [ ] Required-field validation works
+* [ ] Form submission works
+* [ ] Keyboard accessible
+* [ ] Labels correctly associated
+* [ ] Validation errors accessible
+* [ ] No password logging
+* [ ] TypeScript has no errors
+* [ ] No unnecessary Redux/TanStack Query code added
+* [ ] Code is committed
+
+## Developer Note
+
+**Do not over-engineer this ticket.**
+
+The goal is to establish a clean form boundary that the next ticket can connect to the authentication API.
+
+The next ticket will consume the form's submission data:
+
+```text
+AUTH-001
+LoginForm
+    ↓
+{ username, password }
+    ↓
+AUTH-002
+Authentication API
+    ↓
+TanStack Query mutation
+```

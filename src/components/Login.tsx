@@ -24,7 +24,7 @@ const Login = ({ onSubmit }: LoginProps) => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid, isSubmitting },
+    formState: { errors, isSubmitting },
   } = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
     mode: 'onTouched',
@@ -73,7 +73,7 @@ const Login = ({ onSubmit }: LoginProps) => {
               id="password"
               type="password"
               label="Password"
-              error={errors?.username ? true : false}
+              error={errors?.password ? true : false}
               helperText={errors?.password?.message}
               {...register('password')}
             />

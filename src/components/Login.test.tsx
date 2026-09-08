@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import Login from './Login';
-import userEvent, { PointerEventsCheckLevel } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 
 describe('Login', () => {
@@ -16,12 +16,11 @@ describe('Login', () => {
 
     let element = screen.getByRole('button', { name: /sign in/i });
     await user.click(element);
-    screen.debug();
     expect(await screen.findByText('Username is required')).toBeInTheDocument();
     expect(await screen.findByText('Password is required')).toBeInTheDocument();
   });
 
-  it('', async () => {
+  it('submits valid credentials', async () => {
     const user = userEvent.setup();
 
     const mockOnSubmit = vi.fn();
@@ -45,7 +44,7 @@ describe('Login', () => {
 
   //Accessibility Tests
 
-  it.only('provides accessible labels for form controls', async () => {
+  it('provides accessible labels for form controls', async () => {
     const user = userEvent.setup();
 
     render(<Login />);

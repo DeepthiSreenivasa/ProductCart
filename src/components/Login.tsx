@@ -7,14 +7,36 @@ import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { useForm, Controller } from 'react-hook-form';
-import { HTMLFormMethod } from 'react-router-dom';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const signInSchema = z.object({
+  username: z
+    .string()
+    .min(1, 'Username is required') // Catches empty inputs
+    .regex(
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      'Please enter a valid email address',
+    ),
+  password: z
+    .string()
+    .min(1, 'Password is required') // Catches empty inputs
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@@$!%*?&]{8,}$/,
+      'Password must include uppercase, lowercase, a number, and a special character',
+    ),
+});
+
+type SignInFormData = z.infer<typeof signInSchema>;
 
 const Login = () => {
   const {
     control,
     handleSubmit,
     formState: { isValid, isSubmitting },
-  } = useForm({
+  } = useForm<SignInFormData>({
+    resolver: zodResolver(signInSchema),
+    mode: 'onTouched',
     defaultValues: { username: '', password: '' },
   });
 
@@ -38,13 +60,6 @@ const Login = () => {
             <Controller
               name="username"
               control={control}
-              rules={{
-                required: 'Username is required',
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: 'Invalid email address',
-                },
-              }}
               render={({ field, fieldState: { error } }) => (
                 <TextField
                   {...field}
@@ -60,9 +75,6 @@ const Login = () => {
             <Controller
               name="password"
               control={control}
-              rules={{
-                required: 'Password is required',
-              }}
               render={({ field, fieldState: { error } }) => (
                 <TextField
                   {...field}

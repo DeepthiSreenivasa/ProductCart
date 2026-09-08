@@ -1,0 +1,116 @@
+# User Story: User Login
+
+**Story ID:** AUTH-001
+**Epic:** Authentication
+**Priority:** High
+
+## User Story
+
+**As a registered user,**
+I want to log in to the Product Cart application using my username and password,
+**so that** I can securely access authenticated features such as my cart and checkout.
+
+## Acceptance Criteria
+
+### AC1 — Login Form
+
+Given I am on the Login page,
+
+* I should see a username field.
+* I should see a password field.
+* I should see a Login button.
+* Username and password should be required fields.
+
+### AC2 — Successful Login
+
+Given I have entered valid credentials,
+
+When I click **Login**,
+
+* The application should send a `POST` request to the authentication API.
+* The request should contain my username and password.
+* While the request is in progress, the Login button should indicate a loading state.
+* On successful authentication, the application should store the authenticated user/session information in Redux.
+* I should be redirected to the authenticated part of the application.
+
+### AC3 — Invalid Credentials
+
+Given I have entered invalid credentials,
+
+When I click **Login**,
+
+* The API request should fail gracefully.
+* A meaningful error message should be displayed.
+* I should remain on the Login page.
+* The application should not consider me authenticated.
+
+### AC4 — Prevent Duplicate Submission
+
+Given the login request is already in progress,
+
+When I click the Login button again,
+
+* A second login request should not be submitted.
+* The Login button should remain disabled/loading until the request completes.
+
+### AC5 — Authentication State
+
+After successful login,
+
+* Redux should contain the authenticated user's relevant information.
+* The application should be able to determine whether the user is authenticated.
+* Refreshing the page should follow the application's defined session strategy.
+
+### AC6 — Logout
+
+Given I am authenticated,
+
+When I click **Logout**,
+
+* The authentication state should be cleared from Redux.
+* I should no longer be considered authenticated.
+* I should be redirected to the Login page.
+
+### AC7 — Protected Routes
+
+Given I am not authenticated,
+
+When I attempt to access an authenticated route such as Cart or Checkout,
+
+* I should not be allowed to access that page.
+* I should be redirected to the Login page.
+
+## Technical Expectations
+
+* **React Hook Form** → form state
+* **Zod** → form validation
+* **TanStack Query** → login API mutation/server interaction
+* **Redux Toolkit** → authentication/client state
+* **React Router** → navigation and protected routes
+* Authentication API → `POST /auth/login`
+
+## Non-Functional Requirements
+
+* Login should be keyboard accessible.
+* Validation errors should be accessible to screen readers.
+* Loading and error states should be clearly communicated.
+* Credentials must not be logged to the console.
+* Authentication-related code should be separated from UI components.
+* API logic should not be embedded directly inside the Login component.
+
+## Definition of Done
+
+* [ ] Login page implemented
+* [ ] Form validation implemented
+* [ ] Authentication API integrated
+* [ ] TanStack Query mutation implemented
+* [ ] Redux authentication state implemented
+* [ ] Loading state implemented
+* [ ] Error state implemented
+* [ ] Successful navigation implemented
+* [ ] Logout implemented
+* [ ] Protected route implemented
+* [ ] Unit/component tests added
+* [ ] Accessibility verified
+* [ ] No credentials/tokens logged
+* [ ] Code reviewed

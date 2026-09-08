@@ -14,7 +14,7 @@ describe('Login', () => {
 
     render(<Login />);
 
-    let element = screen.getByRole('button', { name: /sign in/i });
+    const element = screen.getByRole('button', { name: /sign in/i });
     await user.click(element);
     expect(await screen.findByText('Username is required')).toBeInTheDocument();
     expect(await screen.findByText('Password is required')).toBeInTheDocument();
@@ -27,13 +27,13 @@ describe('Login', () => {
 
     render(<Login onSubmit={mockOnSubmit} />);
 
-    let userNameField = screen.getByRole('textbox', { name: /user name/i });
+    const userNameField = screen.getByRole('textbox', { name: /user name/i });
     await user.type(userNameField, 'Jhon');
 
-    let userPasswordField = screen.getByLabelText(/password/i);
+    const userPasswordField = screen.getByLabelText(/password/i);
     await user.type(userPasswordField, 'password');
 
-    let submitButton = screen.getByRole('button', { name: /Sign in/i });
+    const submitButton = screen.getByRole('button', { name: /Sign in/i });
     await user.click(submitButton);
 
     expect(mockOnSubmit).toHaveBeenCalledWith({
@@ -43,18 +43,18 @@ describe('Login', () => {
   });
 
   it('does not log password to console', async () => {
-    let user = userEvent.setup();
+    const user = userEvent.setup();
 
     const consoleSpy = vi.spyOn(console, 'log');
     render(<Login />);
 
-    let userNameField = screen.getByRole('textbox', { name: /user name/i });
+    const userNameField = screen.getByRole('textbox', { name: /user name/i });
     await user.type(userNameField, 'Jhon');
 
-    let passwordField = screen.getByLabelText(/password/i);
+    const passwordField = screen.getByLabelText(/password/i);
     await user.type(passwordField, 'Secret123!');
 
-    let submitButton = screen.getByRole('button', {
+    const submitButton = screen.getByRole('button', {
       name: /sign in/i,
     });
     await user.click(submitButton);
@@ -69,15 +69,15 @@ describe('Login', () => {
     const user = userEvent.setup();
 
     render(<Login />);
-    let element = screen.getByRole('button', { name: /sign in/i });
+    const element = screen.getByRole('button', { name: /sign in/i });
     await user.click(element);
 
-    let userNameField = screen.getByRole('textbox', { name: /user name/i });
+    const userNameField = screen.getByRole('textbox', { name: /user name/i });
     expect(userNameField).toBeInTheDocument();
     expect(userNameField).toHaveAttribute('aria-invalid', 'true');
     expect(userNameField).toHaveAttribute('aria-describedby');
 
-    let passwordField = screen.getByLabelText(/password/i);
+    const passwordField = screen.getByLabelText(/password/i);
     expect(passwordField).toBeInTheDocument();
     expect(passwordField).toHaveAttribute('aria-invalid', 'true');
     expect(passwordField).toHaveAttribute('aria-describedby');

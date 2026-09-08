@@ -42,7 +42,7 @@ describe('Login', () => {
     });
   });
 
-  it('does not log console with passwords', async () => {
+  it('does not log password to console', async () => {
     let user = userEvent.setup();
 
     const consoleSpy = vi.spyOn(console, 'log');
@@ -52,14 +52,14 @@ describe('Login', () => {
     await user.type(userNameField, 'Jhon');
 
     let passwordField = screen.getByLabelText(/password/i);
-    await user.type(passwordField, 'password');
+    await user.type(passwordField, 'Secret123!');
 
     let submitButton = screen.getByRole('button', {
       name: /sign in/i,
     });
     await user.click(submitButton);
 
-    expect(consoleSpy).not.toHaveBeenCalledWith(expect.stringContaining('password'));
+    expect(consoleSpy).not.toHaveBeenCalledWith(expect.stringContaining('Secret123!'));
     consoleSpy.mockRestore();
   });
 

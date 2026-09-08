@@ -11,13 +11,8 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const signInSchema = z.object({
-  username: z
-    .string()
-    .min(1, 'Username is required') // Catches empty inputs
-    .regex(
-      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-      'Please enter a valid email address',
-    ),
+  username: z.string().min(1, 'Username is required'), // Catches empty inputs
+
   password: z
     .string()
     .min(1, 'Password is required') // Catches empty inputs
@@ -40,8 +35,8 @@ const Login = () => {
     defaultValues: { username: '', password: '' },
   });
 
-  const onSubmit = (data) => {
-    console.log('Form Data Submitted:', data);
+  const onSubmit = (data: SignInFormData) => {
+    console.log('Form Data Submitted');
   };
 
   return (

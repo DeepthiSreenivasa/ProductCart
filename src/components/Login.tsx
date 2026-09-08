@@ -3,9 +3,10 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import Typography from '@mui/material/Typography';
 
 const signInSchema = z.object({
   username: z.string().min(1, 'Username is required'), // Catches empty inputs
@@ -15,19 +16,23 @@ const signInSchema = z.object({
 
 type SignInFormData = z.infer<typeof signInSchema>;
 
-const Login = () => {
+type LoginProps = {
+  onSubmit?: (data: SignInFormData) => void;
+};
+
+const Login = ({ onSubmit }: LoginProps) => {
   const {
-    control,
+    register,
     handleSubmit,
-    formState: { isValid, isSubmitting },
+    formState: { errors, isValid, isSubmitting },
   } = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
     mode: 'onTouched',
     defaultValues: { username: '', password: '' },
   });
 
-  const onSubmit = (data: SignInFormData) => {
-    console.log('Form Data Submitted');
+  const handleLoginSubmit = (data: SignInFormData) => {
+    onSubmit?.(data);
   };
 
   return (
@@ -41,39 +46,39 @@ const Login = () => {
           minHeight: 300,
         }}
       >
-        <Box component="form" onSubmit={handleSubmit(onSubmit)} aria-labelledby="login-form">
+        <Box
+          component="form"
+          onSubmit={handleSubmit(handleLoginSubmit)}
+          aria-labelledby="login-form-title"
+        >
+          <Typography
+            id="login-form-title"
+            variant="h5"
+            component="h1"
+            sx={{ textAlign: 'center' }}
+          >
+            Sign In
+          </Typography>
           <Stack spacing={2} sx={{ display: 'inline-flex' }}>
-            <Controller
-              name="username"
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <TextField
-                  {...field}
-                  id="username"
-                  label="User Name"
-                  type="text"
-                  error={error ? true : false}
-                  helperText={error?.message}
-                />
-              )}
+            <TextField
+              id="username"
+              label="User Name"
+              type="text"
+              error={errors?.username ? true : false}
+              helperText={errors?.username?.message}
+              {...register('username')}
             />
 
-            <Controller
-              name="password"
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <TextField
-                  {...field}
-                  id="password"
-                  type="password"
-                  label="Password"
-                  error={error ? true : false}
-                  helperText={error?.message}
-                />
-              )}
+            <TextField
+              id="password"
+              type="password"
+              label="Password"
+              error={errors?.username ? true : false}
+              helperText={errors?.password?.message}
+              {...register('password')}
             />
 
-            <Button type="submit" variant="contained" disabled={!isValid || isSubmitting}>
+            <Button type="submit" variant="contained" disabled={isSubmitting}>
               Sign In
             </Button>
           </Stack>

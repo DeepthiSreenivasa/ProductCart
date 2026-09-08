@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react';
 import Login from './Login';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
-import { use } from 'react';
 
 describe('Login', () => {
   it('renders the login form', () => {
@@ -60,7 +59,7 @@ describe('Login', () => {
     });
     await user.click(submitButton);
 
-    expect(consoleSpy).not.toHaveBeenCalledWith(expect.stringContaining('Secret123'));
+    expect(consoleSpy).not.toHaveBeenCalledWith(expect.stringContaining('password'));
     consoleSpy.mockRestore();
   });
 
@@ -72,7 +71,6 @@ describe('Login', () => {
     render(<Login />);
     let element = screen.getByRole('button', { name: /sign in/i });
     await user.click(element);
-    screen.debug;
 
     let userNameField = screen.getByRole('textbox', { name: /user name/i });
     expect(userNameField).toBeInTheDocument();

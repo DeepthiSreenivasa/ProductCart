@@ -1,6 +1,3 @@
-//TODO : use react hook form
-
-import { useState } from 'react';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -13,13 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 const signInSchema = z.object({
   username: z.string().min(1, 'Username is required'), // Catches empty inputs
 
-  password: z
-    .string()
-    .min(1, 'Password is required') // Catches empty inputs
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@@$!%*?&]{8,}$/,
-      'Password must include uppercase, lowercase, a number, and a special character',
-    ),
+  password: z.string().min(1, 'Password is required'), // Catches empty inputs
 });
 
 type SignInFormData = z.infer<typeof signInSchema>;
@@ -50,7 +41,7 @@ const Login = () => {
           minHeight: 300,
         }}
       >
-        <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+        <Box component="form" onSubmit={handleSubmit(onSubmit)} aria-labelledby="login-form">
           <Stack spacing={2} sx={{ display: 'inline-flex' }}>
             <Controller
               name="username"
@@ -60,7 +51,7 @@ const Login = () => {
                   {...field}
                   id="username"
                   label="User Name"
-                  type="email"
+                  type="text"
                   error={error ? true : false}
                   helperText={error?.message}
                 />

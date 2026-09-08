@@ -1,45 +1,25 @@
+//TODO : use react hook form
+
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
+import { useForm, Controller } from 'react-hook-form';
 import { HTMLFormMethod } from 'react-router-dom';
 
 const Login = () => {
-  const [formData, setFormData] = useState({ username: '', password: '' });
-  const [formError, setFormError] = useState({ usernameInvalid: false, passwordInvalid: false });
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid, isSubmitting },
+  } = useForm({
+    defaultValues: { username: '', password: '' },
+  });
 
-  const getUserName = ($event: React.ChangeEvent<HTMLInputElement>) => {
-    let name = $event.target.value;
-
-    setFormData((prev) => {
-      return { ...prev, username: name };
-    });
-
-    if (!emailRegex.test(formData.username)) {
-      console.log('Into else');
-      setFormError((prev) => {
-        return {
-          ...prev,
-          usernameInvalid: true,
-        };
-      });
-      console.log('Error::', formError.usernameInvalid);
-    }
-  };
-
-  const getPassword = ($event: React.ChangeEvent<HTMLInputElement>) => {
-    let password = $event.target.value;
-    setFormData((prev) => {
-      return { ...prev, password: password };
-    });
-  };
-
-  const handleSubmit = ($event: React.FormEvent<HTMLFormElement>) => {
-    $event.preventDefault();
-    console.log('FormEvent::', formData);
+  const onSubmit = (data) => {
+    console.log('Form Data Submitted:', data);
   };
 
   return (
@@ -53,31 +33,49 @@ const Login = () => {
           minHeight: 300,
         }}
       >
-        <Box component="form" onSubmit={handleSubmit}>
+        <Box component="form" onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={2} sx={{ display: 'inline-flex' }}>
-            <TextField
-              required
-              id="username"
-              label="User Name"
-              type="email"
-              value={formData?.username}
-              onChange={getUserName}
-              error={formError.usernameInvalid}
-              helperText={formError.usernameInvalid ? 'Invalid UserName' : ''}
+            <Controller
+              name="username"
+              control={control}
+              rules={{
+                required: 'Username is required',
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'Invalid email address',
+                },
+              }}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  id="username"
+                  label="User Name"
+                  type="email"
+                  error={error ? true : false}
+                  helperText={error?.message}
+                />
+              )}
             />
-            <TextField
-              required
-              id="password"
-              type="password"
-              label="Password"
-              value={formData?.password}
-              onChange={getPassword}
+
+            <Controller
+              name="password"
+              control={control}
+              rules={{
+                required: 'Password is required',
+              }}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  id="password"
+                  type="password"
+                  label="Password"
+                  error={error ? true : false}
+                  helperText={error?.message}
+                />
+              )}
             />
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={formError.usernameInvalid || formError.passwordInvalid}
-            >
+
+            <Button type="submit" variant="contained" disabled={!isValid || isSubmitting}>
               Sign In
             </Button>
           </Stack>

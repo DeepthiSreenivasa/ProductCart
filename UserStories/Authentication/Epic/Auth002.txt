@@ -1,0 +1,285 @@
+AUTH-002 — Integrate Login API
+
+Epic: Authentication
+Story: Integrate Login API with Login Form
+Priority: High
+Type: User Story
+Status: To Do
+
+USER STORY
+
+As a user,
+I want my login credentials to be submitted to the authentication API,
+so that the application can authenticate me.
+
+OBJECTIVE
+
+Connect the existing AUTH-001 Login Form to a backend login API using TanStack Query.
+
+Expected architecture:
+
+Login.tsx
+    ↓
+TanStack Query Mutation
+    ↓
+authApi.ts
+    ↓
+fetch()
+    ↓
+Backend API
+
+ACCEPTANCE CRITERIA
+
+AC1 — Authentication API Service
+
+Create:
+
+src/api/authApi.ts
+
+It must expose a login() function.
+
+Endpoint:
+
+POST /auth/login
+
+Request:
+
+{
+  "username": "emily",
+  "password": "emilyspass"
+}
+
+AC2 — Type-safe API Contract
+
+Define:
+
+type LoginCredentials = {
+  username: string;
+  password: string;
+};
+
+Response:
+
+type LoginResponse = {
+  id: number;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  image: string;
+  accessToken: string;
+  refreshToken: string;
+};
+
+The API function must have an explicit return type:
+
+Promise<LoginResponse>
+
+AC3 — Use Fetch API
+
+Use the native fetch API.
+
+The request must:
+- Use POST
+- Send JSON
+- Set the appropriate Content-Type
+- Send credentials in the request body
+
+AC4 — HTTP Error Handling
+
+Handle unsuccessful HTTP responses such as:
+- 400
+- 401
+- 500
+
+The API function must throw/reject an error rather than returning a successful LoginResponse.
+
+AC5 — Successful Response
+
+For a successful 2xx response:
+- Parse the JSON response
+- Return it as LoginResponse
+
+AC6 — API Layer Separation
+
+authApi.ts must not contain:
+- React components
+- React hooks
+- React Hook Form
+- Redux
+- TanStack Query
+
+The API layer must remain framework-independent.
+
+AC7 — TanStack Query Mutation
+
+Use a TanStack Query mutation for the login request.
+
+Login.tsx should not directly call fetch().
+
+Expected flow:
+
+Login.tsx
+    ↓
+Mutation
+    ↓
+login()
+    ↓
+fetch()
+
+AC8 — Loading State
+
+While login is pending:
+- Disable the Sign In button
+- Prevent duplicate submissions
+- Provide appropriate loading feedback
+
+AC9 — API Error Handling
+
+When authentication fails:
+- Display a meaningful error message
+- Do not crash the application
+- Do not expose sensitive information
+
+AC10 — Preserve Client-side Validation
+
+AUTH-001 validation must continue to work.
+
+Invalid form submissions must not trigger the API request.
+
+AC11 — Security
+
+Do not:
+- Log passwords
+- Store tokens yet
+- Put tokens into Redux
+- Put tokens into localStorage
+- Put tokens into sessionStorage
+
+Token/session management will be handled in a later ticket.
+
+AC12 — Tests
+
+Add tests covering:
+- Successful API request
+- Failed API request
+- Correct request payload
+- Invalid form → API is not called
+- Loading state
+- API error displayed in UI
+- Existing accessibility behavior
+
+OUT OF SCOPE
+
+Do not implement:
+- Redux authentication state
+- Token persistence
+- Protected routes
+- Logout
+- Refresh-token handling
+- Authorization headers
+- Session restoration
+- Redirect after login
+- User profile state
+- Global authentication context
+
+These will be separate tickets.
+
+TECHNICAL CONSTRAINTS
+
+Must use:
+- React
+- TypeScript
+- React Hook Form
+- Zod
+- MUI
+- TanStack Query
+- Native fetch
+
+Expected structure:
+
+src/
+├── api/
+│   └── authApi.ts
+├── components/
+│   ├── Login.tsx
+│   └── Login.test.tsx
+└── ...
+
+DEFINITION OF DONE
+
+- [ ] authApi.ts created
+- [ ] Request/response types defined
+- [ ] login() implemented using fetch
+- [ ] HTTP errors handled
+- [ ] Successful response parsed
+- [ ] TanStack Query mutation implemented
+- [ ] Login form connected to mutation
+- [ ] Loading state handled
+- [ ] API errors displayed
+- [ ] Existing Zod validation preserved
+- [ ] Invalid form doesn't call API
+- [ ] Tests added/updated
+- [ ] Accessibility not regressed
+- [ ] No passwords logged
+- [ ] No token persistence
+- [ ] No Redux authentication state
+- [ ] TypeScript passes
+- [ ] Build passes
+- [ ] PR created
+- [ ] Code review reaches 9+/10
+
+IMPLEMENTATION PLAN
+
+Step 1:
+Implement only AC1–AC6 in src/api/authApi.ts.
+
+Focus on:
+- LoginCredentials
+- LoginResponse
+- login()
+- fetch
+- Request configuration
+- HTTP error handling
+- JSON parsing
+- TypeScript types
+
+Do not modify Login.tsx yet.
+
+After Step 1, show the authApi.ts implementation for review.
+
+Step 2:
+Configure TanStack Query if required.
+
+Step 3:
+Create the login mutation.
+
+Step 4:
+Connect the mutation to Login.tsx.
+
+Step 5:
+Implement loading and error handling.
+
+Step 6:
+Add/update tests.
+
+Step 7:
+Run:
+npm test
+npm run typeCheck
+npm run build
+
+Step 8:
+Create the PR.
+
+Step 9:
+Code review with a minimum quality bar of 9/10.
+
+STARTING TASK
+
+Work only on:
+
+src/api/authApi.ts
+
+Do not modify Login.tsx yet.

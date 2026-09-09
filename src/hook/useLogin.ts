@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import loginUser from '../services/loginUser';
 import { useMutation } from '@tanstack/react-query';
 

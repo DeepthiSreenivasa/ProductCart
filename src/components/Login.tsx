@@ -18,11 +18,7 @@ const signInSchema = z.object({
 
 type SignInFormData = z.infer<typeof signInSchema>;
 
-type LoginProps = {
-  onSubmit?: (data: SignInFormData) => void;
-};
-
-const Login = ({ onSubmit }: LoginProps) => {
+const Login = () => {
   const mutation = useLogin();
   const {
     register,

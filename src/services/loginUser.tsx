@@ -16,7 +16,8 @@ interface ILoggedInUserDetials {
 }
 
 const loginUser = async (credentials: ILoginCredentials): Promise<ILoggedInUserDetials> => {
-  const response = await fetch('https://dummyjson.com/auth/login', {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const response = await fetch(`${API_BASE_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

@@ -7,6 +7,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Typography from '@mui/material/Typography';
+import useLogin from '../hook/useLogin';
+import Alert from '@mui/material/Alert';
 
 const signInSchema = z.object({
   username: z.string().min(1, 'Username is required'),
@@ -16,15 +18,12 @@ const signInSchema = z.object({
 
 type SignInFormData = z.infer<typeof signInSchema>;
 
-type LoginProps = {
-  onSubmit?: (data: SignInFormData) => void;
-};
-
-const Login = ({ onSubmit }: LoginProps) => {
+const Login = () => {
+  const mutation = useLogin();
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
     mode: 'onTouched',
@@ -32,7 +31,7 @@ const Login = ({ onSubmit }: LoginProps) => {
   });
 
   const handleLoginSubmit = (data: SignInFormData) => {
-    onSubmit?.(data);
+    mutation.mutate(data);
   };
 
   return (
@@ -62,7 +61,6 @@ const Login = ({ onSubmit }: LoginProps) => {
             helperText={errors?.username?.message}
             {...register('username')}
           />
-
           <TextField
             id="password"
             type="password"
@@ -71,10 +69,11 @@ const Login = ({ onSubmit }: LoginProps) => {
             helperText={errors?.password?.message}
             {...register('password')}
           />
-
-          <Button type="submit" variant="contained" disabled={isSubmitting}>
+          <Button type="submit" variant="contained" disabled={mutation.isPending}>
             Sign In
           </Button>
+          {mutation.isSuccess && <Alert severity="success">Logged In Successfully</Alert>}
+          {mutation.error && <Alert severity="error">{mutation.error.message}</Alert>}
         </Stack>
       </Box>
     </Paper>

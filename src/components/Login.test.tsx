@@ -1,18 +1,19 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import Login from './Login';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
+import { renderWithQueryClient } from '../test/testUtilts';
 
 describe('Login', () => {
   it('renders the login form', () => {
-    render(<Login />);
+    renderWithQueryClient(<Login />);
     expect(screen.getByRole('heading', { name: /sign in/i })).toBeInTheDocument();
   });
 
   it('shows validation errors when required fields are empty', async () => {
     const user = userEvent.setup();
 
-    render(<Login />);
+    renderWithQueryClient(<Login />);
 
     const element = screen.getByRole('button', { name: /sign in/i });
     await user.click(element);
@@ -25,7 +26,7 @@ describe('Login', () => {
 
     const mockOnSubmit = vi.fn();
 
-    render(<Login onSubmit={mockOnSubmit} />);
+    renderWithQueryClient(<Login />);
 
     const userNameField = screen.getByRole('textbox', { name: /user name/i });
     await user.type(userNameField, 'Jhon');
@@ -36,17 +37,14 @@ describe('Login', () => {
     const submitButton = screen.getByRole('button', { name: /Sign in/i });
     await user.click(submitButton);
 
-    expect(mockOnSubmit).toHaveBeenCalledWith({
-      username: 'Jhon',
-      password: 'password',
-    });
+    expect(await screen.findByText('Logged In Successfully')).toBeInTheDocument();
   });
 
   it('does not log password to console', async () => {
     const user = userEvent.setup();
 
     const consoleSpy = vi.spyOn(console, 'log');
-    render(<Login />);
+    renderWithQueryClient(<Login />);
 
     const userNameField = screen.getByRole('textbox', { name: /user name/i });
     await user.type(userNameField, 'Jhon');
@@ -68,7 +66,7 @@ describe('Login', () => {
   it('provides accessible labels for form controls', async () => {
     const user = userEvent.setup();
 
-    render(<Login />);
+    renderWithQueryClient(<Login />);
     const element = screen.getByRole('button', { name: /sign in/i });
     await user.click(element);
 
